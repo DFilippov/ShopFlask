@@ -11,7 +11,7 @@ class Item(db.Model):
     quantity = db.Column(db.Integer)
     image_url = db.Column(db.String)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    quantity_history = db.relationship('QuantityHistory', backref='item', lazy=True)
+    quantity_history = db.relationship('QuantityHistory', backref='item', lazy=True, cascade="all, delete-orphan")
 
     # Attributes Validations:
     @validates('name')
