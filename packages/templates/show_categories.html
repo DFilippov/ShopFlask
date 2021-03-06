@@ -1,0 +1,32 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container" align="center">
+    <h1>{{ body }}</h1>
+
+    <table>
+        <tr>
+            <th>Category name</th>
+            <th>Description</th>
+            <th>Number Of Items</th>
+        </tr>
+        {% for category in categories %}
+            <tr align="center">
+                    <td> {{ category.name }}</td>
+                    <td>{{ category.description }}</td>
+                    <td>{{ category.items |count }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_category', category_id=category.id) }}">Edit</a>
+                        {# TODO: on delete method = DELETE ? #}
+                        <a href="{{ url_for('delete_category', category_id=category.id) }}">Delete</a>
+                    </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}

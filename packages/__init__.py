@@ -1,12 +1,19 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
+from packages import config
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/[shop.pgsql]'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(config)
+
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-from packages import shop_models, routes
+from packages import routes
+from packages.models.category import Category
+from packages.models.item import Item
+from packages.models.quantity_history import QuantityHistory
+from packages.models.user import User
+db.create_all()
 
-# db.create_all()

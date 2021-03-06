@@ -1,0 +1,45 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container" align="center">
+    <h1>{{ body }}</h1>
+
+
+    <form action="{{ url_for('history') }}" method="post">
+        <p><input type="number", name="old_quantity", placeholder="old_quantity" autofocus required /></p>
+        <p><input type="number", name="new_quantity", placeholder="new_quantity" required /></p>
+        <p><input type="number", name="item_id", placeholder="item_id" required /></p>
+        <p><input type="submit", value="Add" /></p>
+    </form>
+
+    <hr>
+
+    <h1>Available histories</h1>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>Old quantity</th>
+                <th>New quantity</th>
+                <th>Date</th>
+                <th>Item id</th>
+            </tr>
+            {% for history in histories %}
+                <tr>
+                        <td> {{ history.id }}</td>
+                        <td>{{ history.old_quantity }}</td>
+                        <td>{{ history.new_quantity }}</td>
+                        <td>{{ history.date }}</td>
+                        <td>{{ history.item_id }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+</div>
+{% endblock %}
+
+
+

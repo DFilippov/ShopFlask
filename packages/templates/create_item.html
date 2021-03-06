@@ -1,0 +1,32 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ body }}</h1>
+
+    <div class="container">
+    <form action="{{ url_for('create_item') }}" method="post">
+        <p><input type="text", name="name", placeholder="Item name" value="{{ session.get('name', '') }}" minlength="0" maxlength="50" autofocus required /></p>
+        <p><input type="text", name="description", placeholder="Description" maxlength="500" required /></p>
+        <p><input type="number", name="price", placeholder="Price" step="0.01" min="0" inputmode="decimal" required /></p>
+        <p><input type="number", name="quantity", placeholder="Quantity", min="0" required /></p>
+        <p><input type="text", name="image_url", placeholder="Image file name" /></p>
+
+        <label>Category</label>
+        <select name="category_id">
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+
+        <p><input type="submit", value="Add" /></p>
+
+    </form>
+</div>
+{% endblock %}
+
+
+

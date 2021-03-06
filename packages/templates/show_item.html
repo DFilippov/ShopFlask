@@ -1,0 +1,50 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ body }}</h1>
+
+    <div class="container">
+
+        <label>Item's name:    </label>
+        <label>{{ item.name }}</label>
+        <hr>
+        <label>Description:    </label>
+        <label>{{ item.description }}</label>
+        <hr>
+        <label>Price:    </label>
+        <label>${{ item.price }}</label>
+        <hr>
+        <label>Quantity:    </label>
+        <label>{{ item.quantity }}</label>
+        <hr>
+        <label>History of changing quantity:    </label>
+        <div class="container">
+            {% if item.quantity_history %}
+                {% for history in item.quantity_history %}
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Old quantity</th>
+                            <th>New quantity</th>
+                        </tr>
+                        <tr align="center">
+                            <td>{{ history.date }}</td>
+                            <td>{{ history.old_quantity }}</td>
+                            <td>{{ history.new_quantity }}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            {% else %}
+                <label>There was no quantity changing</label>
+            {% endif %}
+        </div>
+
+</div>
+{% endblock %}
+
+
+

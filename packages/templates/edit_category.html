@@ -1,0 +1,21 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container" align="center">
+        <h1>{{ body }}</h1>
+
+        <form action="{{ url_for('edit_category', category_id=category.id) }}" method="post">
+            <p><textarea type="text", name="name", placeholder="Category name" cols="100" autofocus required>{{ category.name }}</textarea></p>
+            <p><textarea type="text", name="description", placeholder="Description" cols="100" rows="5" required>{{ category.description }}</textarea></p>
+            <p><input type="submit", value="Save" /></p>
+        </form>
+
+    </div>
+{% endblock %}
+
+
+

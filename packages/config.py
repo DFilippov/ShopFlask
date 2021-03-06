@@ -1,0 +1,9 @@
+SECRET_KEY = 'e374175cf35e358d56668f97f1ef754f6e9739ad632bd6fe768373884cbcfc08'
+SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/shop'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# pagination
+ITEMS_PER_PAGE = 10
+
+# truncation of strings in templates
+NUMBER_OF_TRUNCATED_SYMBOLS = 100

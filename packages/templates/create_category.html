@@ -1,0 +1,22 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container" align="center">
+    <h1>{{ body }}</h1>
+
+
+    <form action="{{ url_for('create_category') }}" method="post">
+        <p><input type="text", name="name", placeholder="Category name" value="{{ session.get('name', '') }}" autofocus required /></p>
+        <p><input type="text", name="description", placeholder="Description" required /></p>
+        <p><input type="submit", value="Add" /></p>
+    </form>
+
+</div>
+{% endblock %}
+
+
+

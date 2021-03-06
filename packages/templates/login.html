@@ -1,0 +1,21 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ body }}</h1>
+
+    <div class="container">
+    <form action="{{ url_for('login') }}" method="post">
+        <p><input type="text", name="username", placeholder="Username" value="{{ session.get('username', '') }}" autofocus required /></p>
+        <p><input type="password", name="password", placeholder="Password" required /></p>
+        <p><input type="submit", value="Log in" /></p>
+
+    </form>
+</div>
+{% endblock %}
+
+
+

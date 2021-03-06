@@ -9,6 +9,17 @@
 
     {% endblock %}
 </head>
+
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+     <ul class="flashes">
+        {% for message in messages %}
+         <div class="message_flash">{{ message }}</div>
+        {% endfor %}
+    </ul>
+  {% endif %}
+ {% endwith %}
+
 <body>
     {% block body %}
 
