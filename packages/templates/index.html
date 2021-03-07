@@ -19,7 +19,10 @@
 
     {% for item in items %}
         <tr align="center">
-            <td>{{ item.name }}</td>
+            <td>
+                <p><img src="{{ item.image_url }}" width="200" height="300"></p>
+                <p>{{ item.name }}</p>
+            </td>
             <td>{{ item.description }}</td>
             <td>{{ item.category.name }}</td>
             <td>{{ item.price }}</td>
