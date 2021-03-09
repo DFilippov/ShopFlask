@@ -1,12 +1,11 @@
 import secrets
 
-from flask import render_template, request, redirect, url_for, flash, session, Response
+from flask import render_template, request, redirect, url_for, flash, session, Response, current_app
 from functools import wraps
 
-from sqlalchemy import inspect
 
 from packages import app, db
-from packages.config import ITEMS_PER_PAGE, NUMBER_OF_TRUNCATED_SYMBOLS
+# from packages.config import ITEMS_PER_PAGE, NUMBER_OF_TRUNCATED_SYMBOLS
 from packages.models.user import User
 from packages.models.item import Item
 from packages.models.quantity_history import QuantityHistory
@@ -14,6 +13,9 @@ from packages.models.category import Category
 from packages.services.hash_service import HashService
 from packages.services.database_service import DatabaseService
 
+
+ITEMS_PER_PAGE = app.config['ITEMS_PER_PAGE']
+NUMBER_OF_TRUNCATED_SYMBOLS = app.config['NUMBER_OF_TRUNCATED_SYMBOLS']
 
 def login_required(func):
     @wraps(func)
