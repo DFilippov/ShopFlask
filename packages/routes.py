@@ -1,8 +1,10 @@
 import secrets
 
+import psycopg2
 from flask import render_template, request, redirect, url_for, flash, session, Response, current_app
 from functools import wraps
 
+from sqlalchemy.exc import IntegrityError, DataError
 
 from packages import app, db
 # from packages.config import ITEMS_PER_PAGE, NUMBER_OF_TRUNCATED_SYMBOLS
@@ -16,6 +18,7 @@ from packages.services.database_service import DatabaseService
 
 ITEMS_PER_PAGE = app.config['ITEMS_PER_PAGE']
 NUMBER_OF_TRUNCATED_SYMBOLS = app.config['NUMBER_OF_TRUNCATED_SYMBOLS']
+
 
 def login_required(func):
     @wraps(func)
@@ -80,13 +83,27 @@ def truncate_string(string, number_of_symbols=NUMBER_OF_TRUNCATED_SYMBOLS):
 def create_item():
     if request.method == 'POST':
         item = prepare_item()
+        def abort_transaction_and_render_view(error):
+            db.session.rollback()
+            # TODO: implement logger despite of print
+            print('==== CAUGHT ERROR: ', error)
 
-        database_service = DatabaseService()
-        database_service.add_to_db([item])
+            categories = Category.query.all()
+            return render_template('create_item.html', title='Create Item', body='Create item', categories=categories,
+                                   item=item)
 
-        flash("Item '{}' successfully saved to database".format(item.name))
-        return redirect('/')
-
+        try:
+            database_service = DatabaseService()
+            database_service.add_to_db([item])
+            flash("Item '{}' successfully saved to database".format(item.name))
+            return redirect('/')
+        except IntegrityError as error:
+            flash('Item name already exists')
+            abort_transaction_and_render_view(error)
+        except DataError as error:
+            flash('Please check text fields. Probably value is too long or too short')
+            abort_transaction_and_render_view(error)
+        # TODO: check possible exceptions depending on the requirements (name length between 5-50 and other)
     else:
         categories = Category.query.all()
         return render_template('create_item.html', title='Create Item', body='Create item', categories=categories)
@@ -164,11 +181,19 @@ def create_category():
 
         category = Category(name=name, description=description)
 
-        database_service = DatabaseService()
-        database_service.add_to_db([category])
+        try:
+            database_service = DatabaseService()
+            database_service.add_to_db([category])
 
-        flash("Category '{}' successfully created".format(name))
-        return redirect(url_for('show_categories'))
+            flash("Category '{}' successfully created".format(name))
+            return redirect(url_for('show_categories'))
+        except IntegrityError as error:
+            db.session.rollback()
+            # TODO: implement logger despite of print
+            print('==== CAUGHT ERROR: ', error)
+
+            flash('Category name already exists')
+            return render_template('create_category.html', title='Create category', body='Create category')
     else:
         return render_template('create_category.html', title='Create category', body='Create category')
 
