@@ -33,9 +33,6 @@ def login_required(func):
 def add_access_token_in_session():
     access_token_name = 'access_token'
     token = secrets.token_hex(32)
-    print('======= TOKEN IS GENERATED', token)
-    # session[access_token_name] = token
-    # response = make_response('Access token')
     update_session_values({access_token_name: token})
 
 
@@ -69,7 +66,7 @@ def prepare_item():
 
 def truncate_string(string, number_of_symbols=NUMBER_OF_TRUNCATED_SYMBOLS):
     if len(string) > number_of_symbols:
-        return string[:number_of_symbols]
+        return string[:number_of_symbols] + '...'
     return string
 
 
@@ -77,29 +74,6 @@ def truncate_string(string, number_of_symbols=NUMBER_OF_TRUNCATED_SYMBOLS):
 # def login_first(response):
 #     if response.status_code == 401:
 #         return redirect(url_for('login') + '?next=' + response.url)
-
-# TODO: delete this !!
-# @app.route('/history', methods=['GET', 'POST'])
-# def history():
-#     if request.method == 'POST':
-#         old_quantity = int(request.form.get('old_quantity'))
-#         new_quantity = int(request.form.get('new_quantity'))
-#         item_id = request.form.get('item_id')
-#
-#         quantity_history = QuantityHistory(
-#             old_quantity=old_quantity,
-#             new_quantity=new_quantity,
-#             item_id=item_id
-#         )
-#
-#         database_service = DatabaseService()
-#         database_service.add_to_db([quantity_history])
-#
-#         flash('History object is saved')
-#         return redirect(url_for('history'))
-#     else:
-#         histories = QuantityHistory.query.all()
-#         return render_template('history.html', title='History', body='History', histories=histories)
 
 
 @app.route('/items/create', methods=['GET', 'POST'])
@@ -121,7 +95,6 @@ def create_item():
 @app.route('/items/<item_id>')
 def show_item(item_id):
     item = Item.query.filter(Item.id == item_id).first()
-    print('===== SHOW ITEM quantity_history ', item.quantity_history)
     return render_template('show_item.html', title='Item info', body='Item info', item=item)
 
 
@@ -143,9 +116,6 @@ def edit_item(item_id):
             database_service = DatabaseService()
             database_service.add_to_db([quantity_history])
 
-        # TODO: save changes to DB
-        #  and maybe refactor prepare_item method to save_item
-        #  (with initializing item, saving it to DB and showing flash message)
         flash("Item '{}' successfully edited and saved to database".format(request.form.get('name')))
         return redirect(url_for('show_item', item_id=item_id))
     else:
@@ -178,13 +148,11 @@ def show_categories():
     for category in categories:
         if len(category.description) > NUMBER_OF_TRUNCATED_SYMBOLS:
             category.description = truncate_string(category.description)
-    # number_of_truncated_symbols = NUMBER_OF_TRUNCATED_SYMBOLS
     return render_template(
         'show_categories.html',
         title='Categories',
         body='List of available categories',
-        categories=categories,
-        # number_of_truncated_symbols=number_of_truncated_symbols
+        categories=categories
     )
 
 
@@ -237,12 +205,6 @@ def index(page=1):
     page_number = int(page)
     items = Item.query.paginate(page_number, ITEMS_PER_PAGE, False).items
     return render_template('index.html', title='List of items', body='List of items', items=items)
-
-
-# @app.route('/about')
-# @login_required
-# def about():
-#     return render_template('about.html', title='ABOUT SHOP!!!!', body='ABOUT OUR SHOP!!!')
 
 
 @app.route('/register', methods=['GET', 'POST'])
