@@ -21,7 +21,6 @@ class Item(db.Model):
         else:
             raise ValueError("item's name must be between 5 and 50")
 
-    # TODO: -> str replace with int !!
     @validates('price')
     def validate_price(self, key, price) -> int:
         if float(price) >= 0:

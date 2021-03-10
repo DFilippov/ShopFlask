@@ -11,23 +11,6 @@ class QuantityHistory(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
 
     # Attributes Validations:
-    # TODO: check why this commented code results None values in old_ and new_quantity
-    # def check_positive_value(self, attribute, value) -> int:
-    #     print('====== CHECK', attribute, value)
-    #     number = int(value)
-    #     if number >= 0:
-    #         return number
-    #     else:
-    #         raise ValueError("Value of '{}' must be non negative".format(attribute))
-    #
-    # @validates('old_quantity')
-    # def validate_old_quantity(self, key, old_quantity) -> int:
-    #     self.check_positive_value('old_quantity', old_quantity)
-    #
-    # @validates('new_quantity')
-    # def validate_new_quantity(self, key, new_quantity) -> int:
-    #     self.check_positive_value('new_quantity', new_quantity)
-
     @validates('old_quantity')
     def validate_old_quantity(self, key, old_quantity):
         if old_quantity >= 0:
