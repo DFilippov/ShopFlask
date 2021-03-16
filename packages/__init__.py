@@ -6,6 +6,9 @@ from packages.config import DevelopmentConfig
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
+# TODO: remove
+app.jinja_env.auto_reload = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
