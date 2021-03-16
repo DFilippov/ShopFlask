@@ -30,7 +30,9 @@
             {%  if 'access_token' in session %}
                 <td>
                     {# TODO: add to cart implement post method (add parameters to session)  ONCLICK function look up in rails project#}
-                    <input value="Add to cart" type="submit" >
+                    <strong type="hidden" id="number_in_cart_{{ item.id }}" style="color:#00FF00"></strong><br>
+                    <button onclick="addToCart( {{ item.id }} )">Add to cart</button>
+<!--                    <input value="Add to cart" type="submit" onclick="addToCart()">-->
                     <a href="{{ url_for('edit_item', item_id=item.id) }}">Edit item</a>
                     {# TODO: on delete method = DELETE ? #}
                     <a href="{{ url_for('delete_item', item_id=item.id) }}">Delete item</a>
