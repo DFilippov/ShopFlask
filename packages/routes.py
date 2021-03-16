@@ -1,4 +1,5 @@
 import secrets
+import time
 
 import psycopg2
 from flask import render_template, request, redirect, url_for, flash, session, Response, current_app
@@ -18,6 +19,18 @@ from packages.services.database_service import DatabaseService
 
 ITEMS_PER_PAGE = app.config['ITEMS_PER_PAGE']
 NUMBER_OF_TRUNCATED_SYMBOLS = app.config['NUMBER_OF_TRUNCATED_SYMBOLS']
+
+
+# decorator for endpoints that require static files to bypass caching (timestamp is added)
+# e.g. for pages that have button 'Add cart' with javascript on it
+def set_timestamp_for_static(func):
+    @wraps(func)
+    def set_timestamp(*args, **kwargs):
+        with app.app_context():
+            request.TIMESTAMP_FOR_STATIC = int(time.time())
+        return func(*args, **kwargs)
+
+    return set_timestamp
 
 
 def login_required(func):
@@ -226,6 +239,7 @@ def delete_category(category_id):
 @app.route('/')
 @app.route('/index')
 @app.route('/index/<page>')
+@set_timestamp_for_static
 def index(page=1):
     page_number = int(page)
     items = Item.query.paginate(page_number, ITEMS_PER_PAGE, False).items
