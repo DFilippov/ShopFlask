@@ -5,8 +5,8 @@ function addToCart(item_id) {
     item_quantity = item_quantity * 1 + 1;
     storage.setItem(key, item_quantity);
 
-    console.log(`======== LOG !!!!=== ${item_id}`);
     updateNumberInCartLabel(item_id);
+    updateCartButton();
 }
 
 function itemsInCartCount(item_id) {
@@ -21,11 +21,28 @@ function updateNumberInCartLabel(item_id) {
     label = document.getElementById(id);
     label.innerHTML = 'Already in cart - ' + itemsInCartCount(item_id);
     label.type = '';
-
-    console.log('updateNumberInCartLabel', item_id);
 }
 
 function hideNumberInCartLabel(item_id) {
     label = document.getElementById('number_in_cart_')
     label.type = 'hidden'
+}
+
+function getNumberOfItemsInCart() {
+    storage = window.localStorage;
+    number_of_items_in_cart = 0;
+    for (var i = 0; i < storage.length; i++) {
+        let key = storage.key(i);
+        if (key.startsWith('item_id_')) {;
+            value = storage.getItem(key)
+            number_of_items_in_cart += Number.parseInt(value);
+        }
+    }
+    return number_of_items_in_cart;
+}
+
+function updateCartButton() {
+    button = document.getElementById('cart_button')
+    console.log('getNumberOfItemsInCart', getNumberOfItemsInCart())
+    button.innerHTML = `( ${getNumberOfItemsInCart()} )`
 }
