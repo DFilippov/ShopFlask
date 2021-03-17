@@ -6,6 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/static/js/cart.js?{{ request.TIMESTAMP_FOR_STATIC }}"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     {% block title %}
 
     {% endblock %}
@@ -22,6 +24,9 @@
  {% endwith %}
 
 <body>
+    <div align="right">
+        <button ><span class="material-icons">&#xe8cc;</span><label id="cart_button"></label></button>
+    </div>
     {% block body %}
 
     {% endblock %}
