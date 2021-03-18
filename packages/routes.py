@@ -344,3 +344,9 @@ def logout():
     remove_session_key(['username', 'access_token'])
     flash('Logged out')
     return redirect(url_for('index'))
+
+
+@app.route('/cart', methods=['GET', 'POST'])
+def show_cart():
+    cart_data_form = request.form.get('cart_data')
+    return render_template('cart.html', title='Cart', body=cart_data_form)
