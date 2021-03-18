@@ -25,10 +25,21 @@
 
 <body>
     <div align="right">
-        <button ><span class="material-icons">&#xe8cc;</span><label id="cart_button"></label></button>
+        {% if ('access_token' in session) and (request.url_rule|string != '/cart') %}
+        <form action="/cart" method="POST">
+            <button id="cart_button" type="submit" onclick="updateCartDataElement()"><span class="material-icons">&#xe8cc;</span><label id="cart_button_label"></label></button>
+<!--            <input type="submit" onclick="updateCartDataElement()"><span class="material-icons">&#xe8cc;</span><label id="cart_button"></label>-->
+            <input id="cart_data" name="cart_data" type="hidden">
+        </form>
+        {% endif %}
     </div>
     {% block body %}
 
     {% endblock %}
 </body>
 </html>
+
+<script>
+    updateCartButton();
+</script>
+
