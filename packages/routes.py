@@ -1,3 +1,4 @@
+import json
 import secrets
 import time
 
@@ -227,7 +228,7 @@ def edit_category(category_id):
 
 @app.route('/categories/<category_id>/delete', methods=['GET', 'POST'])
 def delete_category(category_id):
-    category = Category.query.filter(Category.id == category_id)
+    category = Category.query.filter(Category.id == category_id).first()
     category_name = category.first().name
     category.delete()
     db.session.commit()
@@ -348,5 +349,17 @@ def logout():
 
 @app.route('/cart', methods=['GET', 'POST'])
 def show_cart():
-    cart_data_form = request.form.get('cart_data')
-    return render_template('cart.html', title='Cart', body=cart_data_form)
+    if request.method == 'POST':
+        print('=== @app.route /cart, show_cart', request.method)
+    else:
+        cart_data_json = request.args.get('cart_data')
+        cart_dict = json.loads(cart_data_json)
+        items = []
+        for key, cart_quantity in cart_dict.items():
+            item = Item.query.filter(Item.id == key).first()
+            item.quantity = cart_quantity
+            items.append(item)
+            print('=== show_cart , for (key, value) in cart_data_form:', key, value, str(item))
+
+        return render_template('cart.html', title='Cart', body='Chosen items in cart', items=items)
+
