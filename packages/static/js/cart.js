@@ -1,9 +1,12 @@
-function addToCart(item_id) {
-    let cartExists = localStorage.getItem('cart') != null;
+function checkCartExists() {
+    let cart = getDataFromLocalStorage();
+    let cartExists = 'cart' in localStorage;
     if (cartExists == false) {
-        localStorage.setItem('cart', null);
+        saveCartInLocalStorage({});
     }
+}
 
+function addToCart(item_id) {
     updateCart(item_id);
     updateNumberInCartLabel(item_id);
     updateCartButton();
@@ -11,29 +14,26 @@ function addToCart(item_id) {
 
 // updates data in 'cart'-object of localStorage (in the cart the key is item's id)
 function updateCart(item_id) {
-    let cart = localStorage.getItem('cart');
-    let cartObject = JSON.parse(cart);
+    let cartObject = getCartDataObject();
     if (cartObject == null) {
-        cartObject = {}
+        cartObject = {};
     }
     let key = item_id;
     if (cartObject[key] != null) {
-        let newValue = cartObject[key] * 1 + 1
-        cartObject[key] = newValue
+        let newValue = cartObject[key] * 1 + 1;
+        cartObject[key] = newValue;
     } else {
-        cartObject[key] = 1
+        cartObject[key] = 1;
     }
 
-    updated = JSON.stringify(cartObject)
-    localStorage.setItem('cart', updated)
+    saveCartInLocalStorage(cartObject);
 }
 
 // will get number of the particular item in the cart (in 'cart'-object of localStorage)
 // (in the cart the key is item's id)
 function numberOfItemInCart(item_id) {
     let key = item_id;
-    let cart = window.localStorage.getItem('cart');
-    let cartObject = JSON.parse(cart);
+    let cartObject = getCartDataObject();
     let item_quantity = cartObject[key];
     return item_quantity;
 }
@@ -48,11 +48,13 @@ function updateNumberInCartLabel(item_id) {
 }
 
 function getNumberOfAllItemsInCart() {
-    let cart = localStorage.getItem('cart');
-    let cartObject = JSON.parse(cart);
+    let cartObject = getCartDataObject();
+    if (cartObject == null) {
+        return 0;
+    }
     values = Object.values(cartObject);
     total_value = values.reduce( function(sum, value) {
-            return sum + value
+            return sum + parseInt(value)
         }, 0
     );
     return total_value;
@@ -64,12 +66,51 @@ function updateCartButton() {
 }
 
 function getDataFromLocalStorage() {
-    let data = localStorage.getItem('cart');
+    let data = window.localStorage.getItem('cart');
     return data;
 }
 
 function updateCartDataElement() {
-    data = getDataFromLocalStorage();
+    let data = getDataFromLocalStorage();
     cartDataElement = document.getElementById('cart_data');
-    cartDataElement.value = data
+    cartDataElement.value = data;
+}
+
+function changeCartItemQuantity(itemId, value) {
+    let cartObject = getCartDataObject();
+
+    const newValue = parseInt(value);
+    if (newValue < 1 || newValue == null || value == '') {
+        removeItemFromCart(itemId);
+    } else {
+        cartObject[itemId] = newValue;
+        saveCartInLocalStorage(cartObject);
+    }
+
+    updateCartEndpointParams();
+}
+
+function getCartDataObject() {
+    let cart = window.localStorage.getItem('cart');
+    const cartObject = JSON.parse(cart);
+    return cartObject;
+}
+
+function saveCartInLocalStorage(cartObject) {
+   let json = JSON.stringify(cartObject);
+   window.localStorage.setItem('cart', json);
+}
+
+// updates /cart endpoint with fresh cart_data (for case if the /cart page will be reloaded/refreshed)
+function updateCartEndpointParams() {
+    let json = getDataFromLocalStorage();
+    endpointParams = '/cart?cart_data=' + json;
+    history.pushState('', '', endpointParams);
+}
+
+// removes item from cart and saves changes to localStorage
+function removeItemFromCart(itemId) {
+    let cartObject = getCartDataObject();
+    delete cartObject[itemId];
+    saveCartInLocalStorage(cartObject);
 }
