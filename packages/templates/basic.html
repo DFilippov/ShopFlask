@@ -6,8 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/static/js/cart.js?{{ request.TIMESTAMP_FOR_STATIC }}"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% block title %}
 
     {% endblock %}
@@ -25,13 +24,13 @@
 
 <body>
     <div align="right">
+        <form action="/cart" method="GET">
         {% if ('access_token' in session) and (request.url_rule|string != '/cart') %}
-        <form action="/cart" method="POST">
             <button id="cart_button" type="submit" onclick="updateCartDataElement()"><span class="material-icons">&#xe8cc;</span><label id="cart_button_label"></label></button>
 <!--            <input type="submit" onclick="updateCartDataElement()"><span class="material-icons">&#xe8cc;</span><label id="cart_button"></label>-->
+        {% endif %}
             <input id="cart_data" name="cart_data" type="hidden">
         </form>
-        {% endif %}
     </div>
     {% block body %}
 
@@ -39,7 +38,10 @@
 </body>
 </html>
 
+{% if ('access_token' in session) and (request.url_rule|string != '/cart') %}
 <script>
+    checkCartExists();
     updateCartButton();
 </script>
+{% endif %}
 

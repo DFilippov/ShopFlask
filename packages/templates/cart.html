@@ -1,10 +1,50 @@
-{% extends 'basic.html' %}
+{%  extends 'basic.html' %}
 
-{% block title %}
-    <title>{{ title }}</title>
-{% endblock %}
+{%  block title %}
+    <title>ShopFlask</title>
+{%  endblock %}
 
-{% block body %}
-    <input id="access_token" name="access_token" type="hidden" value="{{ session['access_token'] }}">
-    <h1>{{ body }}</h1>
-{% endblock %}
+
+{%  block body %}
+    <table>
+    <tr>
+        <th>Item name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Selected Quantity</th>
+        <th>Total</th>
+
+    </tr>
+
+    {% for item in items %}
+        <tr align="center">
+            <td>
+                <p><img src="{{ item.image_url }}" width="300" height="300"></p>
+                <p>{{ item.name }}</p>
+            </td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.category.name }}</td>
+            <td>{{ item.price }}</td>
+
+            <td>
+                <input id="{{ item.id }}" value="{{ item.quantity }}" type="number" min="1" onchange="changeCartItemQuantity(itemId={{item.id}}, value=this.value)">
+            </td>
+
+<!--            {%  if 'access_token' in session %}    TODO: DELETE !!-->
+                <td>
+                    <strong type="hidden" id="number_in_cart_{{ item.id }}" style="color:#00FF00"></strong><br>
+                    <button onclick="addToCart( {{ item.id }} )">Add to cart</button>
+<!--                    <input value="Add to cart" type="submit" onclick="addToCart()">-->
+                    <a href="{{ url_for('edit_item', item_id=item.id) }}">Edit item</a>
+                    {# TODO: on delete method = DELETE ? #}
+                    <a href="{{ url_for('delete_item', item_id=item.id) }}">Delete item</a>
+    {#                <input value="Delete item" formaction="{{ url_for('delete_item', item_id=item.id) }}" formmethod="DELETE" type="submit">#}
+                </td>
+<!--            {%  endif %}-->
+        </tr>
+    {% endfor %}
+
+    </table>
+
+{%  endblock %}

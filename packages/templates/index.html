@@ -29,7 +29,6 @@
             <td>{{ item.quantity }}</td>
             {%  if 'access_token' in session %}
                 <td>
-                    {# TODO: add to cart implement post method (add parameters to session)  ONCLICK function look up in rails project#}
                     <strong type="hidden" id="number_in_cart_{{ item.id }}" style="color:#00FF00"></strong><br>
                     <button onclick="addToCart( {{ item.id }} )">Add to cart</button>
 <!--                    <input value="Add to cart" type="submit" onclick="addToCart()">-->
