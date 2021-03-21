@@ -348,6 +348,7 @@ def logout():
 
 
 @app.route('/cart', methods=['GET', 'POST'])
+@set_timestamp_for_static
 def show_cart():
     if request.method == 'POST':
         print('=== @app.route /cart, show_cart', request.method)
@@ -356,10 +357,11 @@ def show_cart():
         cart_dict = json.loads(cart_data_json)
         items = []
         for key, cart_quantity in cart_dict.items():
-            item = Item.query.filter(Item.id == key).first()
-            item.quantity = cart_quantity
-            items.append(item)
-            print('=== show_cart , for (key, value) in cart_data_form:', key, value, str(item))
+            # if int(cart_quantity) > 0:
+            if cart_quantity and cart_quantity > 0:
+                item = Item.query.filter(Item.id == key).first()
+                item.quantity = cart_quantity
+                items.append(item)
 
-        return render_template('cart.html', title='Cart', body='Chosen items in cart', items=items)
+        return render_template('cart.html', title='Cart', body='List of items in your cart', items=items)
 
