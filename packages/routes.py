@@ -80,6 +80,7 @@ def truncate_string(string, number_of_symbols=NUMBER_OF_TRUNCATED_SYMBOLS):
 
 
 @app.route('/items/create', methods=['GET', 'POST'])
+@login_required
 def create_item():
     if request.method == 'POST':
         item = prepare_item()
@@ -110,12 +111,14 @@ def create_item():
 
 
 @app.route('/items/<item_id>')
+@login_required
 def show_item(item_id):
     item = Item.query.filter(Item.id == item_id).first()
     return render_template('show_item.html', title='Item info', body='Item info', item=item)
 
 
 @app.route('/items/<item_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_item(item_id):
     original_item = Item.query.filter(Item.id == item_id).first()
     old_quantity = original_item.quantity
@@ -149,6 +152,7 @@ def edit_item(item_id):
 
 
 @app.route('/items/<item_id>/delete', methods=['GET', 'DELETE'])
+@login_required
 def delete_item(item_id):
     item = Item.query.filter(Item.id == item_id)
     item_name = item.first().name
@@ -160,6 +164,7 @@ def delete_item(item_id):
 
 
 @app.route('/categories')
+@login_required
 def show_categories():
     categories = Category.query.order_by(Category.id)
     for category in categories:
@@ -174,6 +179,7 @@ def show_categories():
 
 
 @app.route('/categories/create', methods=['GET', 'POST'])
+@login_required
 def create_category():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -199,6 +205,7 @@ def create_category():
 
 
 @app.route('/categories/<category_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_category(category_id):
     category = Category.query.filter(Category.id == category_id).first()
     if request.method == 'POST':
@@ -213,6 +220,7 @@ def edit_category(category_id):
 
 
 @app.route('/categories/<category_id>/delete', methods=['GET', 'POST'])
+@login_required
 def delete_category(category_id):
     category = Category.query.filter(Category.id == category_id)
     category_name = category.first().name
